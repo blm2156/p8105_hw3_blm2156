@@ -23,16 +23,19 @@ aisle_info = instacart %>%
 ```
 The aisle in which the most items were ordered from is aisle 83 (fresh vegetables), with 150609 orders. The aisle in which the second most items were ordered from is aisle 24 (fresh fruits), with 150473 orders. The aisle in which the third most items were ordered from is aisle 123 (packaged vegetables fruits), with 78493 orders.
 
+
 ```{r}
 instacart_plot = filter(aisle_info, n >10000)
 ggplot(
   instacart_plot, 
-  aes(x = n, y = aisle)) + 
-  geom_point() +
-  ggtitle("Number of items ordered in each aisle \n(limited to aisles with more than 10,000 items ordered")
+  aes(x = reorder(aisle, -n), y =n)) + 
+  geom_point(color = 'blue') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text = element_text(size = 7.5)) +
+  ggtitle("Number of items ordered in each aisle \n(limited to aisles with more than 10,000 items ordered") +
+labs(y = "# of Items Ordered",
+     x = "Aisle")
 ```
-
-
 
 
 
