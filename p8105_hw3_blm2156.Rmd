@@ -7,6 +7,7 @@ output: github_document
 ```{r}
 library(tidyverse)
 library(p8105.datasets)
+library(knitr)
 data("instacart")
 ```
 
@@ -15,6 +16,7 @@ There are `r nrow(instacart)` rows in the instacart dataset. There are `r ncol(i
 
 There are `r nrow(distinct(instacart, aisle))` distinct aisles in the dataset. 
 
+## # of Aisles and Most Popular Aisle
 ```{r}
 aisle_info = instacart %>% 
   group_by(aisle_id, aisle) %>%
@@ -23,7 +25,7 @@ aisle_info = instacart %>%
 ```
 The aisle in which the most items were ordered from is aisle 83 (fresh vegetables), with 150609 orders. The aisle in which the second most items were ordered from is aisle 24 (fresh fruits), with 150473 orders. The aisle in which the third most items were ordered from is aisle 123 (packaged vegetables fruits), with 78493 orders.
 
-
+## Instacart Plot
 ```{r}
 instacart_plot = filter(aisle_info, n >10000)
 ggplot(
@@ -37,5 +39,20 @@ labs(y = "# of Items Ordered",
      x = "Aisle")
 ```
 
+## 3 Most popular items in each aisle
+
+```{r}
+library(knitr)
+
+ranking = instacart %>%
+filter(aisle == "baking ingredients" | aisle == "dog food care" | aisle == "packaged vegetables fruits") %>%
+  group_by(aisle, product_name)%>%
+  summarise(n = n()) %>%
+  mutate(product_ranking = min_rank(desc(n))) %>% 
+  filter(product_ranking < 4) %>%
+  knitr::kable()
+  ranking
+
+```
 
 
