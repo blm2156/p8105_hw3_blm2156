@@ -52,7 +52,39 @@ filter(aisle == "baking ingredients" | aisle == "dog food care" | aisle == "pack
   filter(product_ranking < 4) %>%
   knitr::kable()
   ranking
-
 ```
 
+
+```{r}
+mean_hour = instacart %>%
+filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
+  group_by(product_name, order_hour_of_day, order_dow)%>%
+  summarise(n = n()) %>%
+  mutate(mean_hour = mean(order_hour_of_day)) %>% 
+  knitr::kable()
+  mean_hour
+  
+  
+  mean_hour = instacart %>%
+filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
+group_by(product_name, order_hour_of_day, order_dow)%>%
+  summarise(mean(order_hour_of_day)) %>%
+  knitr::kable()
+  mean_hour
+  
+  
+  
+mean_hour_apples_icecream=instacart %>%
+  filter(product_name == "Pink Lady Apples" | 
+      product_name == "Coffee Ice Cream") %>%
+  group_by(product_name, order_dow) %>%
+  summarize(mean_order_hour= mean(order_hour_of_day)) %>%
+  select(product_name, order_dow, mean_order_hour) %>%
+  pivot_wider(
+      names_from = order_dow,
+      values_from = mean_order_hour
+  ) %>%
+  knitr::kable ()
+mean_hour_apples_icecream
+```
 
