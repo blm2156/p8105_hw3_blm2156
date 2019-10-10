@@ -175,7 +175,11 @@ labs(
 ```
 # Problem 3
 ```{r}
-prob3 = read_csv("./data/accel_data.csv") 
-
+prob3 = read_csv("./data/accel_data.csv") %>%
+  janitor::clean_names() %>%
+  mutate(
+    dow = day == "Saturday" | day == "Sunday",
+    dow = ifelse( dow == TRUE, "Weekend", "Weekday")
+    )
 ```
 
