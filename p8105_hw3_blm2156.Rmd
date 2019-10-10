@@ -152,4 +152,30 @@ brfss_spaghetti =
   )
 brfss_spaghetti
 ```
+## Two-Panel Plot
+```{r}
+two_panel_data = brfss %>%
+  filter(topic == "Overall Health" |
+           response == "Excellent" |
+           response == "Very good" |
+           response == "Good" |
+           response == "Fair" |
+           response == "Poor",
+           year == "2006" | 
+           year== "2010",
+           locationabbr == "NY")
+ggplot(two_panel_data, aes(x = response, y = data_value, color = response)) +
+  geom_point() +
+  facet_grid(. ~ year) +d
+labs(
+    title = "Distribution of data values in NY \nfor 2006 & 2010 by response in NY",
+    x = "Response",
+    y = "Data Value"
+  )
+```
+# Problem 3
+```{r}
+prob3 = read_csv("./data/accel_data.csv") 
+
+```
 
