@@ -134,10 +134,22 @@ FL, NJ, TX, CA, MD, NC, NE, WA, MA, NY, OH, CO, PA, and SC each were observed at
 
 ```{r}
 excellent_data = brfss %>%
-  filter(topic == "Overall Health" |
-           response == "Excellent") %>%
+  filter(response == "Excellent") %>%
   group_by(year, locationabbr) %>%
   summarise(mean_data = mean(data_value, na.rm = TRUE)) %>%
   select(year, locationabbr, mean_data)
+```
+
+```{r}
+brfss_spaghetti =
+  excellent_data %>%
+  ggplot(aes(x = year, y = mean_data, group = locationabbr)) +
+  geom_line(aes(color = locationabbr)) +
+  labs(
+    title = "Average value over time within 50 states",
+    x = "Year",
+    y = "Average Data Value"
+  )
+brfss_spaghetti
 ```
 
