@@ -166,7 +166,7 @@ two_panel_data = brfss %>%
            locationabbr == "NY")
 ggplot(two_panel_data, aes(x = response, y = data_value, color = response)) +
   geom_point() +
-  facet_grid(. ~ year) +d
+  facet_grid(. ~ year) +
 labs(
     title = "Distribution of data values in NY \nfor 2006 & 2010 by response in NY",
     x = "Response",
@@ -178,8 +178,10 @@ labs(
 prob3 = read_csv("./data/accel_data.csv") %>%
   janitor::clean_names() %>%
   mutate(
+    day = factor(day, labels = c("Monday", "Tuesday", "Wednesday",  "Thursday", "Friday", "Saturday", "Sunday")),
     dow = day == "Saturday" | day == "Sunday",
     dow = ifelse( dow == TRUE, "Weekend", "Weekday")
-    )
+    ) %>%
+  select(week, day_id, day, dow, everything())
 ```
 
