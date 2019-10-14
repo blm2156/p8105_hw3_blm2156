@@ -165,13 +165,15 @@ two_panel_data = brfss %>%
            year== "2010",
            locationabbr == "NY")
 ggplot(two_panel_data, aes(x = response, y = data_value, color = response)) +
-  geom_point() +
+  geom_boxplot() +
   facet_grid(. ~ year) +
 labs(
     title = "Distribution of data values in NY \nfor 2006 & 2010 by response in NY",
     x = "Response",
     y = "Data Value"
   )
+
+two_panel_data
 ```
 # Problem 3
 ```{r}
@@ -182,12 +184,33 @@ prob3 = read_csv("./data/accel_data.csv") %>%
     dow = day == "Saturday" | day == "Sunday",
     dow = ifelse( dow == TRUE, "Weekend", "Weekday")
     ) %>%
-  select(week, day, dow, everything(), -day_id)
+  select(week, day, dow, everything())
 ```
 There are `r nrow(prob3)` observations in this dataset (5 weeks-worth of accelerometer information for our subject). There are `r ncol(prob3)` in which we have a column for week number, day of the week, weekday vs. weekend, and 1440 columns indicating each minute's worth of activity associated with the particular day of interest. 
 
 ```{r}
+agg_acc_data = prob3 %>%
+  pivot_longer(activity_1:activity_1440,
+               names_to = "activity_min",
+               values_to = "activity") %>%
+  group_by(day_id, day, week, dow) %>%
+  summarize(daily_activity = sum(activity))
+agg_acc_data
 
 ```
+There do not appear to be any apparent trends. The daily activity appears to be quite high for most days. There are 2 Wednesdays that produced a daily activity value of 1440, which seems a bit odd.
 
+```{r}
+plot_agg_acc = agg_acc_data %>%
+  ggplot(aes(x = day_id, y = daily_activity, color = day)) +
+  geom_point() +
+  geom_line () +
+  labs(
+    title = "Activity over course of day",
+    x = "Day_id",
+    y = "Total Activity Time"
+  )
+plot_agg_acc
+```
+This graph does not appear to have any apparent trends. It appears as though as time throughout the month went on, there was less activity on the subsequent Wednesdays and Thursdays after the first 10-15 days. At around day 24, there appears to be no/minimal activity for Wednesdays. Most days did not have an increase in activity over the course of the month; although Fridays had a slight increase in activity. Saturdays and Sundays appeared to be most consistent throughout the period of the month. There doesn't appear to be any consistencies when looking at this graph per consecutive days - this could be a good indication of a still-prevalent congestive heart failure problem in this individual.
 
