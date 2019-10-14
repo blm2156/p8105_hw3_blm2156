@@ -16,7 +16,7 @@ There are `r nrow(instacart)` rows in the instacart dataset. There are `r ncol(i
 
 There are `r nrow(distinct(instacart, aisle))` distinct aisles in the dataset. 
 
-## # of Aisles and Most Popular Aisle
+## Number of Aisles and Most Popular Aisle
 ```{r}
 aisle_info = instacart %>% 
   group_by(aisle_id, aisle) %>%
@@ -54,26 +54,8 @@ filter(aisle == "baking ingredients" | aisle == "dog food care" | aisle == "pack
   ranking
 ```
 
-
+## Mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week
 ```{r}
-mean_hour = instacart %>%
-filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
-  group_by(product_name, order_hour_of_day, order_dow)%>%
-  summarise(n = n()) %>%
-  mutate(mean_hour = mean(order_hour_of_day)) %>% 
-  knitr::kable()
-  mean_hour
-  
-  
-  mean_hour = instacart %>%
-filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
-group_by(product_name, order_hour_of_day, order_dow)%>%
-  summarise(mean(order_hour_of_day)) %>%
-  knitr::kable()
-  mean_hour
-  
-  
-  
 mean_hour_apples_icecream=instacart %>%
   filter(product_name == "Pink Lady Apples" | 
       product_name == "Coffee Ice Cream") %>%
@@ -87,11 +69,14 @@ mean_hour_apples_icecream=instacart %>%
   knitr::kable ()
 mean_hour_apples_icecream
 ```
-## Problem 2
+
+
+# Problem 2
 ```{r}
 data("brfss_smart2010")
 ```
 
+## Data cleaning
 ```{r}
 brfss = brfss_smart2010 %>%
   janitor::clean_names() %>%
@@ -106,7 +91,7 @@ select(-location_id, -data_value_footnote_symbol, -data_value_footnote)
 brfss
 ```
 
-In 2002, which states were observed at 7 or more locations? What about in 2010?
+## In 2002, which states were observed at 7 or more locations? What about in 2010?
 ```{r}
 brfss %>%
   filter(year == "2002") %>%
@@ -132,6 +117,7 @@ brfss %>%
 
 FL, NJ, TX, CA, MD, NC, NE, WA, MA, NY, OH, CO, PA, and SC each were observed at 7 or more locations.
 
+## Dataset limited to Excellent responses 
 ```{r}
 excellent_data = brfss %>%
   filter(response == "Excellent") %>%
@@ -140,6 +126,7 @@ excellent_data = brfss %>%
   select(year, locationabbr, mean_data)
 ```
 
+## Spaghetti Plot
 ```{r}
 brfss_spaghetti =
   excellent_data %>%
@@ -152,6 +139,7 @@ brfss_spaghetti =
   )
 brfss_spaghetti
 ```
+
 ## Two-Panel Plot
 ```{r}
 two_panel_data = brfss %>%
@@ -175,7 +163,10 @@ labs(
 
 two_panel_data
 ```
+
 # Problem 3
+
+## Tidy Data
 ```{r}
 prob3 = read_csv("./data/accel_data.csv") %>%
   janitor::clean_names() %>%
@@ -188,6 +179,8 @@ prob3 = read_csv("./data/accel_data.csv") %>%
 ```
 There are `r nrow(prob3)` observations in this dataset (5 weeks-worth of accelerometer information for our subject). There are `r ncol(prob3)` in which we have a column for week number, day of the week, weekday vs. weekend, and 1440 columns indicating each minute's worth of activity associated with the particular day of interest. 
 
+
+## Aggregate across minutes to create a total activity variable for each day
 ```{r}
 agg_acc_data = prob3 %>%
   pivot_longer(activity_1:activity_1440,
@@ -200,6 +193,7 @@ agg_acc_data
 ```
 There do not appear to be any apparent trends. The daily activity appears to be quite high for most days. There are 2 Wednesdays that produced a daily activity value of 1440, which seems a bit odd.
 
+## Single-panel plot that shows the 24-hour activity time courses for each day
 ```{r}
 plot_agg_acc = agg_acc_data %>%
   ggplot(aes(x = day_id, y = daily_activity, color = day)) +
